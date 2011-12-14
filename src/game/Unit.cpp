@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
- * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
+ * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos-zero>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3918,13 +3918,8 @@ void Unit::RemoveNotOwnSingleTargetAuras()
 
 void Unit::RemoveSpellAuraHolder(SpellAuraHolder *holder, AuraRemoveMode mode)
 {
-    // Statue unsummoned at holder remove
     SpellEntry const* AurSpellInfo = holder->GetSpellProto();
-    Totem* statue = NULL;
     Unit* caster = holder->GetCaster();
-    if(IsChanneledSpell(AurSpellInfo) && caster)
-        if(caster->GetTypeId()==TYPEID_UNIT && ((Creature*)caster)->IsTotem() && ((Totem*)caster)->GetTotemType()==TOTEM_STATUE)
-            statue = ((Totem*)caster);
 
     if (m_spellAuraHoldersUpdateIterator != m_spellAuraHolders.end() && m_spellAuraHoldersUpdateIterator->second == holder)
         ++m_spellAuraHoldersUpdateIterator;
@@ -3952,9 +3947,6 @@ void Unit::RemoveSpellAuraHolder(SpellAuraHolder *holder, AuraRemoveMode mode)
 
     if (mode != AURA_REMOVE_BY_DELETE)
         holder->HandleSpellSpecificBoosts(false);
-
-    if(statue)
-        statue->UnSummon();
 
     // If holder in use (removed from code that plan access to it data after return)
     // store it in holder list with delayed deletion
@@ -5169,7 +5161,7 @@ int32 Unit::DealHeal(Unit *pVictim, uint32 addhealth, SpellEntry const *spellPro
 
     Unit* unit = this;
 
-    if( GetTypeId()==TYPEID_UNIT && ((Creature*)this)->IsTotem() && ((Totem*)this)->GetTotemType()!=TOTEM_STATUE)
+    if( GetTypeId()==TYPEID_UNIT && ((Creature*)this)->IsTotem())
         unit = GetOwner();
 
     if (unit->GetTypeId()==TYPEID_PLAYER)
@@ -5288,10 +5280,10 @@ uint32 Unit::SpellDamageBonusDone(Unit *pVictim, SpellEntry const *spellProto, u
     if(!spellProto || !pVictim || damagetype==DIRECT_DAMAGE )
         return pdamage;
 
-    // For totems get damage bonus from owner (statue isn't totem in fact)
-    if( GetTypeId()==TYPEID_UNIT && ((Creature*)this)->IsTotem() && ((Totem*)this)->GetTotemType()!=TOTEM_STATUE)
+    // For totems get damage bonus from owner
+    if( GetTypeId()==TYPEID_UNIT && ((Creature*)this)->IsTotem())
     {
-        if(Unit* owner = GetOwner())
+        if (Unit* owner = GetOwner())
             return owner->SpellDamageBonusDone(pVictim, spellProto, pdamage, damagetype);
     }
 
@@ -5589,8 +5581,8 @@ uint32 Unit::SpellCriticalHealingBonus(SpellEntry const *spellProto, uint32 dama
  */
 uint32 Unit::SpellHealingBonusDone(Unit *pVictim, SpellEntry const *spellProto, int32 healamount, DamageEffectType damagetype, uint32 stack)
 {
-    // For totems get healing bonus from owner (statue isn't totem in fact)
-    if( GetTypeId()==TYPEID_UNIT && ((Creature*)this)->IsTotem() && ((Totem*)this)->GetTotemType()!=TOTEM_STATUE)
+    // For totems get healing bonus from owner
+    if( GetTypeId()==TYPEID_UNIT && ((Creature*)this)->IsTotem())
         if(Unit* owner = GetOwner())
             return owner->SpellHealingBonusDone(pVictim, spellProto, healamount, damagetype, stack);
 

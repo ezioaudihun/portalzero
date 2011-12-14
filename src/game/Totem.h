@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
- * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
+ * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos-zero>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +25,7 @@
 enum TotemType
 {
     TOTEM_PASSIVE    = 0,
-    TOTEM_ACTIVE     = 1,
-    TOTEM_STATUE     = 2
+    TOTEM_ACTIVE     = 1
 };
 
 class Totem : public Creature
