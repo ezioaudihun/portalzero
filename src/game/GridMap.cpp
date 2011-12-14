@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
- * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
+ * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos-zero>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -988,12 +988,12 @@ float TerrainInfo::GetWaterOrGroundLevel(float x, float y, float z, float* pGrou
         // we need ground level (including grid height version) for proper return water level in point
         float ground_z = GetHeight(x, y, z, true, DEFAULT_WATER_SEARCH);
         if (pGround)
-            *pGround = ground_z;
+            *pGround = ground_z + 0.05f;
 
         GridMapLiquidData liquid_status;
 
         GridMapLiquidStatus res = getLiquidStatus(x, y, ground_z, MAP_ALL_LIQUIDS, &liquid_status);
-        return res ? ( swim ? liquid_status.level - 2.0f : liquid_status.level) : ground_z;
+        return res ? ( swim ? liquid_status.level - 2.0f : liquid_status.level) : ground_z + 0.05f;
     }
 
     return VMAP_INVALID_HEIGHT_VALUE;
